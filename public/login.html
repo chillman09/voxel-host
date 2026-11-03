@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voxel Host / Sign in</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%237a5230'/%3E%3Crect width='16' height='5' fill='%235ec45a'/%3E%3Crect x='2' y='5' width='3' height='2' fill='%235ec45a'/%3E%3Crect x='9' y='5' width='4' height='1' fill='%235ec45a'/%3E%3Crect x='3' y='9' width='2' height='2' fill='%235d3f22'/%3E%3Crect x='10' y='11' width='2' height='2' fill='%239a6b3f'/%3E%3C/svg%3E"><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/voxel.css"></head>
+<body class="login-body"><main class="login-shell"><div class="login-card">
+<div class="login-brand"><img class="brand-mark" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%237a5230'/%3E%3Crect width='16' height='5' fill='%235ec45a'/%3E%3Crect x='2' y='5' width='3' height='2' fill='%235ec45a'/%3E%3Crect x='9' y='5' width='4' height='1' fill='%235ec45a'/%3E%3Crect x='3' y='9' width='2' height='2' fill='%235d3f22'/%3E%3Crect x='10' y='11' width='2' height='2' fill='%239a6b3f'/%3E%3C/svg%3E" alt=""><span>Voxel Host</span></div>
+<h1 id="title">Sign in</h1><p class="lede" id="sub" style="font-size:14px">Manage your Minecraft server: console, files and settings.</p>
+<div class="seg" role="tablist"><button type="button" class="on" data-mode="login">Sign in</button><button type="button" data-mode="register">Create account</button></div>
+<form id="form" autocomplete="on"><label>Username<input id="u" required autocomplete="username" minlength="3" maxlength="20"></label>
+<label>Password<input id="p" type="password" required autocomplete="current-password" minlength="8"></label>
+<button class="button button-primary" id="go" type="submit">Sign in <span>→</span></button><p class="form-message" id="msg"></p></form>
+</div><div class="footer login-footer"><span>Voxel Host</span></div></main>
+<script src="/fx.js"></script>
+<script>
+let mode='login';const $=s=>document.querySelector(s);
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('on',x===b));$('#title').textContent=mode==='login'?'Sign in':'Create account';$('#go').firstChild.textContent=mode==='login'?'Sign in ':'Create account ';$('#p').autocomplete=mode==='login'?'current-password':'new-password';$('#msg').textContent=''});
+$('#form').onsubmit=async e=>{e.preventDefault();const m=$('#msg');m.className='form-message';m.textContent='';
+ const r=await fetch('/api/auth/'+mode,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:$('#u').value,password:$('#p').value})});const j=await r.json().catch(()=>({}));
+ if(!r.ok){m.className='form-message error';m.textContent=j.error||'Something went wrong';const c=$('.login-card');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake');return}
+ location.replace('/')};
+</script></body></html>
